@@ -67,13 +67,25 @@ namespace CsvHelper.Configuration
 		/// <returns>The reference mapping for the property</returns>
 		protected virtual CsvPropertyReferenceMap References( Type type, Expression<Func<T, object>> expression )
 		{
-			var property = ReflectionHelper.GetProperty( expression );
-			var map = (CsvClassMap)ReflectionHelper.CreateInstance( type );
-			map.CreateMap();
-			map.ReIndex( GetMaxIndex() + 1 );
-			var reference = new CsvPropertyReferenceMap( property, map );
-			ReferenceMaps.Add( reference );
-			return reference;
+            var map = (CsvClassMap)ReflectionHelper.CreateInstance(type);
+		    return References( map, expression );
 		}
+
+	    /// <summary>
+	    /// Maps a property to another class map.
+	    /// </summary>
+	    /// <param name="map">Instance map</param>
+	    /// <param name="expression">The expression.</param>
+	    /// <returns>The reference mapping for the property</returns>
+	    protected virtual CsvPropertyReferenceMap References( CsvClassMap map, Expression<Func<T, object>> expression )
+        {
+            var property = ReflectionHelper.GetProperty(expression);
+            map.CreateMap();
+            map.ReIndex(GetMaxIndex() + 1);
+            var reference = new CsvPropertyReferenceMap(property, map);
+            ReferenceMaps.Add(reference);
+            return reference;
+        }
+
 	}
 }
